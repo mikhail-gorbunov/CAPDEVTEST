@@ -6,21 +6,27 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
+    "@sap-cloud-sdk/http-client": "^2.14.0",
+    "@sap-cloud-sdk/util": "^2.14.0",
     "@sap/cds": "^6",
+    "@sap/xssec": "^3",
     "express": "^4",
     "hdb": "^0.19.0",
-    "@sap/xssec": "^3",
     "passport": "^0"
   },
   "devDependencies": {
     "@sap/ux-specification": "^1.102.14",
+    "rimraf": "^3.0.2",
     "sqlite3": "^5.0.4"
   },
   "engines": {
     "node": "^16"
   },
   "scripts": {
-    "start": "cds run"
+    "start": "cds run",
+    "undeploy": "cf undeploy cpapp --delete-services --delete-service-keys --delete-service-brokers",
+    "build": "rimraf resources mta_archives && mbt build --mtar archive",
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
   },
   "sapux": [
     "app/risks",
@@ -31,13 +37,28 @@
       "[production]": {
         "db": {
           "kind": "hana-cloud"
-        },
-        "auth": {
-          "kind": "xsuaa"
         }
       },
       "db": {
         "kind": "sql"
+      },
+      "OP_API_PURCHASEORDER_PROCESS_SRV_0001": {
+        "kind": "odata-v2",
+        "model": "srv/external/OP_API_PURCHASEORDER_PROCESS_SRV_0001",
+        "[sandbox]": {
+          "credentials": {
+              "url": "https://sandbox.api.sap.com/s4hanacloud/sap/opu/odata/sap/API_PURCHASEORDER_PROCESS_SRV/",
+              "headers": {
+                "APIKey": "nYlAfITSU9aBfBQzbxVSY7gzwFVHIap5"
+            }
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "path": "/sap/opu/odata/sap/API_PURCHASEORDER_PROCESS_SRV",
+            "destination": "cpapp-purord"
+          }
+        }
       }
     }
   }

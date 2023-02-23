@@ -9,6 +9,8 @@ using { managed } from '@sap/cds/common';
     miti        : Association to Mitigations;
     impact      : Integer;
     criticality : Integer;
+    PurOrders   : Association to PurchaseOrder;
+
   }
 
   entity Mitigations : managed {
@@ -18,3 +20,12 @@ using { managed } from '@sap/cds/common';
     timeline     : String;
     risks        : Association to many Risks on risks.miti = $self;
   }
+
+using {  OP_API_PURCHASEORDER_PROCESS_SRV_0001 as purord } from '../srv/external/OP_API_PURCHASEORDER_PROCESS_SRV_0001';
+
+    entity PurchaseOrder as projection on purord.A_PurchaseOrder {
+        PurchaseOrder as PurOrder,
+        CompanyCode as CompCode,
+        PurchaseOrderDate as Date,
+        PurchaseOrderType as OrderType,
+}

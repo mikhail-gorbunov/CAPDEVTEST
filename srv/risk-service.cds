@@ -24,4 +24,11 @@ service RiskService {
             }
         ]) as projection on my.Mitigations;
     annotate Mitigations with @odata.draft.enabled;
+    @readonly
+    entity PurOrder @(restrict : [
+              {
+                  grant : [ 'READ' ],
+                  to : [ 'RiskViewer', 'RiskManager' ]
+              }
+          ]) as projection on my.PurchaseOrder;
 }
