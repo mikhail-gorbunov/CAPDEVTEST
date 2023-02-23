@@ -1,16 +1,6 @@
 _schema-version: '3.1'
 ID: cpapp
 version: 1.0.0
-description: "A simple CAP project."
-parameters:
-  enable-parallel-deployments: true
-build-parameters:
-  before-all:
-    - builder: custom
-      commands:
-        - npm install --production
-        - npx -p @sap/cds-dk cds build --production
-        - npx rimraf gen/db/src/gen/data
 modules:
   - name: cpapp-srv
     type: nodejs
@@ -117,4 +107,17 @@ resources:
     parameters:
       service: html5-apps-repo
       service-plan: app-host
-      
+    deploy_mode: html5-repo
+    enable-parallel-deployments: true
+  build-parameters:
+    before-all:
+    - builder: custom
+      commands:
+      - npm install --production
+      - npx -p @sap/cds-dk cds build --production
+      - npx rimraf gen/db/src/gen/data
+- name: cpapp-logs
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: application-logs
+    service-plan: standard
